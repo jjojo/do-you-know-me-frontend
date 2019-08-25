@@ -1,0 +1,15 @@
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 100%;
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.1);
+  width: 6vw;
+  height: 6vw;
+  min-width: 50px;
+  min-height: 50px;
+  max-width: 300px;
+  max-height: 300px;
+  margin: 25px;
+}
