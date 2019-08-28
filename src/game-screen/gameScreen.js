@@ -1,4 +1,4 @@
-import React, { useEffect, useContext} from 'react';
+import React, { useEffect, useContext, useState} from 'react';
 import { State } from '../store'
 import {socket} from '../App';
 import LeavRoom from '../leave-room/leaveRoom';
@@ -7,6 +7,7 @@ import Question from './question/question';
 
 const GameScreen = () => {
   const { state, dispatch } = useContext(State)
+  const [started, setStarted] = useState(false)
 
   useEffect(() => {
     createGame((state.gameState || {}).room)
@@ -15,11 +16,15 @@ const GameScreen = () => {
       dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
     })
 
+    socket.on('gameStarted', (gameState) => {
+      console.log('GAME STARTED: ', gameState)
+      setStarted(gameState.gameStarted)
+      dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
+    })
+
     socket.on('gameUpdate', (gameState) => {
       console.log('GAME STATE UPDATED: ', gameState)
-      requestAnimationFrame(() => {
-        dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
-      })
+      dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
     })
   }, [])
 
@@ -32,16 +37,14 @@ const GameScreen = () => {
   }
 
   const getPlayers = () => {
-    return state.gameState.players.map(playerId => state.gameState[playerId])
+    return state.gameState.playerIds.map(playerId => state.gameState[playerId])
   }
   
   return (<React.Fragment>{ state.gameState &&
     <div id={"game-screen"}>
-      {state.gameState.gameStarted && 
-      state.gameState.gameStartCountDown > 0 && 
-      state.gameState.gameStartCountDown < 4 &&
+      {started && state.gameState.gameStartCountDown >= 0 &&
         <game-count-down>
-          {state.gameState.gameStartCountDown}
+          {state.gameState.gameStartCountDown === 0 ? 'START' : state.gameState.gameStartCountDown}
         </game-count-down>}
       <header>
         <h1>

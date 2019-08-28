@@ -69,8 +69,8 @@ const GameController = () => {
           </React.Fragment>
           : <React.Fragment>
             <h1>{(state.gameState[state.playerId] || {}).ready && 'You are ready ⭐️'}</h1>
-            <h2>Waiting for ⏳<br/>{state.gameState.players.map(id => {
-              return !state.gameState[id].ready && <span>{state.gameState[id].emoji}</span>
+            <h2>Waiting for ⏳<br/>{state.gameState.playerIds.map(id => {
+              return state.gameState[id] && !state.gameState[id].ready && <span>{state.gameState[id].emoji}</span>
             })}</h2>
           </React.Fragment>}
         

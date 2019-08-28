@@ -18,7 +18,7 @@ const StartPage = () => {
       dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
     })
 
-    socket.on('rejection', (error) => {
+    socket.on('error', (error) => {
       alert(error)
     })
   }, [])
