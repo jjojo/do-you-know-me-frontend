@@ -24,6 +24,7 @@ const StartPage = () => {
   }, [])
 
   const connectToGame = (roomName) => {
+    socket.connect()
     socket.emit('join', roomName, state.playerId);
   }
   

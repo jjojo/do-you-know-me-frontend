@@ -64,6 +64,10 @@
       border-style: inset;
       outline: none;
 
+      &:only-child {
+        width: 100%;
+      }
+
       &:first-child {
         border: 10px solid #ff6b6b;
       }

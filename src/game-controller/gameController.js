@@ -3,6 +3,8 @@ import { State } from '../store'
 import {socket} from '../App';
 import './gameController.scss'
 import LeavRoom from '../leave-room/leaveRoom';
+import ChoosingQuestions from './chosing-questions/choosingQuestions';
+import Playing from './playing/playing';
 
 const GameController = () => {
   const [ username, setUsername ] = useState(null)
@@ -39,12 +41,16 @@ const GameController = () => {
     socket.emit('acceptedQuestion', question)
   }
 
+  const getPlayers = () => {
+    return state.gameState.playerIds.map(playerId => state.gameState[playerId])
+  }
+
   return (
     <div className="game-controller">
       <header style={{backgroundColor: (state.gameState[state.playerId] || {}).color || '#fff'}}>
         <h2>
           <span>{state.gameState.name}</span>
-          <LeavRoom></LeavRoom>
+          <LeavRoom socket={socket}></LeavRoom>
           <span>
             Room: {state.gameState.room}
           </span>
@@ -61,33 +67,16 @@ const GameController = () => {
           </span>
         </React.Fragment>}
       </header>
-      <main>
-        {questions.length > 0
-          ? <React.Fragment>
-            <h2>For {questions.length > 0 && questions[qIndex].points} points</h2>
-            <h1>{questions.length > 0 && questions[qIndex].question}</h1>
-          </React.Fragment>
-          : <React.Fragment>
-            <h1>{(state.gameState[state.playerId] || {}).ready && 'You are ready ⭐️'}</h1>
-            <h2>Waiting for ⏳<br/>{state.gameState.playerIds.map(id => {
-              return state.gameState[id] && !state.gameState[id].ready && <span>{state.gameState[id].emoji}</span>
-            })}</h2>
-          </React.Fragment>}
-        
-      </main>
-      <footer>
-        {!(state.gameState[state.playerId] || {}).ready && <React.Fragment>
-          <button onClick={() => setQIndex((qIndex + 1) % questions.length)}>
-            <span role="img" aria-label="reject">❌</span>
-          </button>
-          <button onClick={() => {
-            setQIndex(0)
-            pickQuestion(questions[qIndex])
-          }}>
-            <span role="img" aria-label="reject">✅</span>
-          </button>
-        </React.Fragment>}
-      </footer>
+      { !state.gameState.gameStarted
+        ? <ChoosingQuestions 
+            questions={questions} 
+            qIndex={qIndex} 
+            ready={(state.gameState[state.playerId] || {}).ready} 
+            players={getPlayers()}
+            setQIndex={setQIndex}
+            pickQuestion={pickQuestion}/>
+        : <Playing/>
+      }
     </div>
   )
 }
