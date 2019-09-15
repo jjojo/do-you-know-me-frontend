@@ -7,9 +7,9 @@ import {
   initialState,
   reducer,
 } from './store'
-import * as io from 'socket.io-client'
 
-export const socket = io('http://192.168.1.48:3000');
+export const socket = new WebSocket('ws://localhost:3000');
+
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -18,6 +18,10 @@ const App = () => {
     if (sessionStorage.getItem('state')) {
       dispatch({type: 'REPOPULATE_STATE', payload: JSON.parse(sessionStorage.getItem('state'))})
     }
+    socket.onmessage = (event) => {
+      console.log(JSON.parse(event.data));
+      dispatch({type: 'UPDATE_GAME_STATE', payload: JSON.parse(event.data)})
+    };    
   }, [])
 
   useEffect(() => {

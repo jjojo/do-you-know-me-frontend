@@ -12,22 +12,25 @@ const GameScreen = () => {
   const [started, setStarted] = useState(false)
 
   useEffect(() => {
-    createGame((state.gameState || {}).room)
-    socket.on('gameCreated', (gameState) => {
-      console.log('GAME CREATED: ', gameState)
-      dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
-    })
+    socket.send(JSON.stringify({action: 'createGame', room: '2'}));
 
-    socket.on('gameStarted', (gameState) => {
-      console.log('GAME STARTED: ', gameState)
-      setStarted(gameState.gameStarted)
-      dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
-    })
+    
+    // createGame((state.gameState || {}).room)
+    // socket.on('gameCreated', (gameState) => {
+    //   console.log('GAME CREATED: ', gameState)
+    //   dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
+    // })
 
-    socket.on('gameUpdate', (gameState) => {
-      console.log('GAME STATE UPDATED: ', gameState)
-      dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
-    })
+    // socket.on('gameStarted', (gameState) => {
+    //   console.log('GAME STARTED: ', gameState)
+    //   setStarted(gameState.gameStarted)
+    //   dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
+    // })
+
+    // socket.on('gameUpdate', (gameState) => {
+    //   console.log('GAME STATE UPDATED: ', gameState)
+    //   dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
+    // })
   }, [])
 
   const fullScreen = () => {

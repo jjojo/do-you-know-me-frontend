@@ -10,18 +10,18 @@ const StartPage = () => {
   const [room, setRoom] = useState('1');
   const { state, dispatch } = useContext(State)
 
-  useEffect(() => {
-    console.log(socket)
+  // useEffect(() => {
+  //   console.log(socket)
 
-    socket.on('joinedGame', (gameState, playerId) => {
-      console.log('Joined1')
-      dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
-    })
+  //   socket.on('joinedGame', (gameState, playerId) => {
+  //     console.log('Joined1')
+  //     dispatch({type: 'UPDATE_GAME_STATE', payload: gameState})
+  //   })
 
-    socket.on('error', (error) => {
-      alert(error)
-    })
-  }, [])
+  //   socket.on('error', (error) => {
+  //     alert(error)
+  //   })
+  // }, [])
 
   const connectToGame = (e, roomName) => {
     e.preventDefault();
