@@ -26,7 +26,7 @@ const ChoosingQuestions = (props) => {
           props.setQIndex(0)
           props.pickQuestion(props.questions[props.qIndex])
         }}>
-          <span role="img" aria-label="reject">✅</span>
+          <span role="img" aria-label="accept">✅</span>
         </button>
       </React.Fragment>}
     </footer>

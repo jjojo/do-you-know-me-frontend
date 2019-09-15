@@ -7,7 +7,7 @@ import {socket} from '../App';
 
 
 const StartPage = () => {
-  const [room, setRoom] = useState('');
+  const [room, setRoom] = useState('1');
   const { state, dispatch } = useContext(State)
 
   useEffect(() => {
@@ -23,7 +23,8 @@ const StartPage = () => {
     })
   }, [])
 
-  const connectToGame = (roomName) => {
+  const connectToGame = (e, roomName) => {
+    e.preventDefault();
     socket.connect()
     socket.emit('join', roomName, state.playerId);
   }
@@ -34,18 +35,19 @@ const StartPage = () => {
         <React.Fragment>{state.gameStarted ? <GameScreen></GameScreen> : <GameController></GameController>}</React.Fragment>
       : (<div className="App">
           <header className="App-header">
-            <p>
-              {/* // <Link to={"/gameScreen"}>Start a Game</Link> */}
+            <div>
               <button onClick={() => dispatch({ type: 'GAME_STARTED', payload: true})}>Start Game</button>
-            </p>
-            <p>
+            </div>
+            <div>
               Or Join a game <br/>
-              <input type="text" onChange={(e) => setRoom(e.target.value)}></input>
+              <form id="joinRoomForm" onSubmit={(e) => connectToGame(e, room)}>
+                <input type="text" onChange={(e) => setRoom(e.target.value)} value={room} autoFocus></input>
+              </form>
               <br/>
-              <button onClick={() => connectToGame(room, state)}>
+              <button type={'submit'} form={'joinRoomForm'}>
                 Join game
               </button>
-            </p>
+            </div>
           </header>
         </div>)}
     </React.Fragment>

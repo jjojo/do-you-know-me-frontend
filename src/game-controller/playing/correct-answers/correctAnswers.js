@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 import { State } from '../../../store'
 import './correctAnswers.scss'
 import { socket } from '../../../App';
@@ -7,19 +7,21 @@ const CorrectAnswers = () => {
   const { state, dispatch } = useContext(State)
   const [answer, setAnswer] = useState(null)
 
+  useEffect(() => {
+    setAnswer(state.gameState.activeQuestion.answers.filter(a => !a.hasOwnProperty('correct'))[0])
+  }, [state.gameState.activeQuestion.answers])
+
   const correctAnswer = (event, bool) => {
     event.preventDefault()
-    socket.emit('CorrectedAnswer', state.gameState.room, answer, bool)
+    socket.emit('CorrectedAnswer', state.gameState.room, answer.playerId, bool)
   }
 
   return (<React.Fragment>
     <main>
       <h1>This is your question! Answers will come in soon, stay ready!</h1>
-      {state.gameState.activeQuestion.answers.map(item => {
-        return(
-          <p key={item.answer}>{item.answer}</p>
-        )
-      })}
+      <p>
+        {answer && answer.answer}
+      </p>
     </main>
     <footer>
       <button onClick={(e) => correctAnswer(e, false)}>
